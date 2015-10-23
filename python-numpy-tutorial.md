@@ -21,6 +21,8 @@ Python:
 Numpy
 -->
 
+This tutorial was contributed by [Justin Johnson](http://cs.stanford.edu/people/jcjohns/).
+
 We will use the Python programming language for all assignments in this course.
 Python is a great general-purpose programming language on its own, but with the
 help of a few popular libraries (numpy, scipy, matplotlib) it becomes a powerful
@@ -386,7 +388,7 @@ def hello(name, loud=False):
         print 'Hello, %s!' % name
 
 hello('Bob') # Prints "Hello, Bob"
-hello('Fred', loud=True)  # Prints "HELLO, BOB!"
+hello('Fred', loud=True)  # Prints "HELLO, FRED!"
 ```
 There is a lot more information about Python classes
 [in the documentation](https://docs.python.org/2/tutorial/controlflow.html#defining-functions).
@@ -764,7 +766,7 @@ print y
 This works; however when the matrix `x` is very large, computing an explicit loop
 in Python could be slow. Note that adding the vector `v` to each row of the matrix
 `x` is equivalent to forming a matrix `vv` by stacking multiple copies of `v` vertically,
-then performing elementwise multiplication of `x` and `vv`. We could implement this
+then performing elementwise summation of `x` and `vv`. We could implement this
 approach like this:
 
 ```python

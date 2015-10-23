@@ -102,7 +102,7 @@ With our CIFAR-10 example, \\(x\_i\\) is now [3073 x 1] instead of [3072 x 1] - 
   </div>
 </div>
 
-**Image data preprocessing.** As a quick note, in the examples above we used the raw pixel values (which range from [0...255]). In Machine Learning, it is a very common practice to always perform normalization of your input features (in case of images every pixel is thought of as a feature). In particular, it is important to **center your data** by subtracting the mean from every feature. In case of images, this corresponds to computing a *mean image* across the training images and subtracting it from every image to get images where the pixels range from approximately [-127 ... 127]. Further common preprocessing is to scale each input feature so that its values range from [-1, 1]. Of these, zero mean centering is arguably more important but we will have to wait for its justification until we understand the dynamics of gradient descent.
+**Image data preprocessing.** As a quick note, in the examples above we used the raw pixel values (which range from [0...255]). In Machine Learning, it is a very common practice to always perform normalization of your input features (in the case of images, every pixel is thought of as a feature). In particular, it is important to **center your data** by subtracting the mean from every feature. In the case of images, this corresponds to computing a *mean image* across the training images and subtracting it from every image to get images where the pixels range from approximately [-127 ... 127]. Further common preprocessing is to scale each input feature so that its values range from [-1, 1]. Of these, zero mean centering is arguably more important but we will have to wait for its justification until we understand the dynamics of gradient descent.
 
 <a name='loss'></a>
 ### Loss function
@@ -115,7 +115,7 @@ For example, going back to the example image of a cat and its scores for the cla
 
 There are several ways to define the details of the loss function. As a first example we will first develop a commonly used loss called the **Multiclass Support Vector Machine** (SVM) loss. The SVM loss is set up so that the SVM "wants" the correct class for each image to a have a score higher than the incorrect classes by some fixed margin \\(\Delta\\). Notice that it's sometimes helpful to anthropomorphise the loss functions as we did above: The SVM "wants" a certain outcome in the sense that the outcome would yield a lower loss (which is good).
 
-Let's now get more precise. Recall that for the i-th example we are given the pixels \\( x\_i \\) and the label \\( y\_i \\) that specifies the index of the correct class. The score function takes the pixels and computes the vector \\( f(x\_i, W) \\) of class scores.  For example, the score for the j-th class is the j-th element: \\( f(x\_i, W)\_j \\). The Multiclass SVM loss for the i-th example is then formalized as follows:
+Let's now get more precise. Recall that for the i-th example we are given the pixels of image \\( x\_i \\) and the label \\( y\_i \\) that specifies the index of the correct class. The score function takes the pixels and computes the vector \\( f(x\_i, W) \\) of class scores.  For example, the score for the j-th class is the j-th element: \\( f(x\_i, W)\_j \\). The Multiclass SVM loss for the i-th example is then formalized as follows:
 
 $$
 L\_i = \sum\_{j\neq y\_i} \max(0, f(x\_i, W)\_j - f(x\_i, W)\_{y\_i} + \Delta)
@@ -159,7 +159,7 @@ $$
 R(W) = \sum\_k\sum\_l W\_{k,l}^2
 $$
 
-In the expression above, we are summing up all the squared elements of \\(W\\). Notice that the regularization function is not a function of the data, it is only based on the weights. Including the regularization penalty completes the full Multiclass Support Vector Machine loss, which is is made up of two components: the **data loss** (which is the average loss \\(L\_i\\) over all examples) and the **regularization loss**. That is, the full Multiclass SVM loss becomes:
+In the expression above, we are summing up all the squared elements of \\(W\\). Notice that the regularization function is not a function of the data, it is only based on the weights. Including the regularization penalty completes the full Multiclass Support Vector Machine loss, which is made up of two components: the **data loss** (which is the average loss \\(L\_i\\) over all examples) and the **regularization loss**. That is, the full Multiclass SVM loss becomes:
 
 $$
 L =  \underbrace{ \frac{1}{N} \sum\_i L\_i }\_\text{data loss} + \underbrace{ \lambda R(W) }\_\text{regularization loss} \\\\
@@ -173,7 +173,7 @@ $$
 
 Where \\(N\\) is the number of training examples. As you can see, we append the regularization penalty to the loss objective, weighted by a hyperparameter \\(\lambda\\). There is no simple way of setting this hyperparameter and it is usually determined by cross-validation.
 
-In addition to the motivation we provided above there are many desirable properties to including the regularization penalty, many of which we will come back to in later sections. For example, it turns out that including the L2 penalty leads to the appealing **max margin** property in SVMs (See [CS229](http://cs229.stanford.edu/notes/cs229-notes3.pdf) lecture notes for full details if you are interested). 
+In addition to the motivation we provided above there are many desirable properties to include the regularization penalty, many of which we will come back to in later sections. For example, it turns out that including the L2 penalty leads to the appealing **max margin** property in SVMs (See [CS229](http://cs229.stanford.edu/notes/cs229-notes3.pdf) lecture notes for full details if you are interested). 
 
 The most appealing property is that penalizing large weights tends to improve generalization, because it means that no input dimension can have a very large influence on the scores all by itself. For example, suppose that we have some input vector \\(x = [1,1,1,1] \\) and two weight vectors \\(w\_1 = [1,0,0,0]\\), \\(w\_2 = [0.25,0.25,0.25,0.25] \\). Then \\(w\_1^Tx = w\_2^Tx = 1\\) so both weight vectors lead to the same dot product, but the L2 penalty of \\(w\_1\\) is 1.0 while the L2 penalty of \\(w\_2\\) is only 0.25. Therefore, according to the L2 penalty the weight vector \\(w\_2\\) would be preferred since it achieves a lower regularization loss. Intuitively, this is because the weights in \\(w\_2\\) are smaller and more diffuse. Since the L2 penalty prefers smaller and more diffuse weight vectors, the final classifier is encouraged to take into account all input dimensions to small amounts rather than a few input dimensions and very strongly. As we will see later in the class, this effect can improve the generalization performance of the classifiers on test images and lead to less *overfitting*. 
 
